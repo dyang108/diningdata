@@ -1,6 +1,5 @@
 import json
 import urllib
-import xml.etree.ElementTree as ET
 from lxml import html
 from flask import request, abort
 from flask.ext import restful
@@ -8,41 +7,26 @@ from flask.ext.restful import reqparse
 from flask_rest_service import app, api, mongo
 from bson.objectid import ObjectId
 
-class ReadingList(restful.Resource):
-    def __init__(self, *args, **kwargs):
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument('reading', type=str)
-        super(ReadingList, self).__init__()
+DEWICK = "11&locationName=Dewick-MacPhie+Dining+Center"
+CARM = "09&locationName=Carmichael+Dining+Center"
+ERROR = { "error": "Resource not found." }
 
-    def get(self):
-        return  [x for x in mongo.db.readings.find()]
+class Menu(restful.Resource):
+    def get(self, hall, day, month, year):
 
-    def post(self):
-        args = self.parser.parse_args()
-        if not args['reading']:
-            abort(400)
+        if hall == "carm":
+            hall = CARM
+        elif hall == "dewick":
+            hall = DEWICK
+        else:
+            return ERROR
 
-        jo = json.loads(args['reading'])
-        reading_id =  mongo.db.readings.insert(jo)
-        return mongo.db.readings.find_one({"_id": reading_id})
-
-
-class Reading(restful.Resource):
-    def get(self, reading_id):
-        return mongo.db.readings.find_one_or_404({"_id": reading_id})
-
-    def delete(self, reading_id):
-        mongo.db.readings.find_one_or_404({"_id": reading_id})
-        mongo.db.readings.remove({"_id": reading_id})
-        return '', 204
-
-
-class Root(restful.Resource):
-    def get(self):
-        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=09&locationName=Carmichael+Dining+Center&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=3%2F28%2F2016")
-        #http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=09&locationName=Carmichael+Dining+Center&naFlag=1
+        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hall + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
         htmlSource = page.read()
         tree = html.fromstring(htmlSource)
+        return self.getdata(tree)
+
+    def getdata(self, tree):
         jsondata = {}
         for meal in tree.findall(".//*[@class='shortmenumeals']"):
             curr_meal = meal.text
@@ -57,6 +41,4 @@ class Root(restful.Resource):
                     jsondata[curr_meal][curr_foodtype].append(food.find(".//*[@name='Recipe_Desc']").text)
         return jsondata
 
-api.add_resource(Root, '/')
-api.add_resource(ReadingList, '/readings/')
-api.add_resource(Reading, '/readings/<ObjectId:reading_id>')
+api.add_resource(Menu, '/<hall>/<day>/<month>/<year>')

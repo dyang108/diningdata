@@ -6,7 +6,8 @@ In order to use the API, call an HTTP GET request on the URL, like so:
 ```
 GET https://tuftsdiningdata.herokuapp.com/menus/[hall]/[day]/[month]/[year]
 ```
-where [hall] is the string 'carm' or 'dewick', and the date is not padded by zeros: 
+where the date is not padded by zeros, and [hall] is one of the following strings: "dewick", "carm", "commons", "paxetlox", "brownandbrew", "hodgdon", "mugar", "tower"
+
 Eg: `GET https://tuftsdiningdata.herokuapp.com/menus/carm/29/3/2016`
 
 If you could please credit me somehow in your project README, I would be very grateful.

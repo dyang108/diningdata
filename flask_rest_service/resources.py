@@ -7,17 +7,23 @@ from flask.ext.restful import reqparse
 from flask_rest_service import app, api, mongo
 from bson.objectid import ObjectId
 
-DEWICK = "11&locationName=Dewick-MacPhie+Dining+Center"
-CARM = "09&locationName=Carmichael+Dining+Center"
-ERROR = { "error": "Resource not found. Dining hall must be carm or dewick." }
+dining_halls = {
+    "dewick": "11&locationName=Dewick-MacPhie+Dining+Center",
+    "carm": "09&locationName=Carmichael+Dining+Center",
+    "commons": "55&locationName=The+Commons+Marketplace",
+    "paxetlox": "27&locationName=Pax+et+Lox+Glatt+Kosher+Deli",
+    "brownandbrew": "04&locationName=Brown+%26+Brew+Coffee+House",
+    "hodgdon": "14&locationName=Hodgdon+Food+On-the-Run++",
+    "mugar": "15&locationName=Mugar+Cafe",
+    "tower": "07&locationName=Tower+Cafe"
+}
+
+ERROR = { "error": "Resource not found. Invalid dining hall." }
 
 class Menu(restful.Resource):
     def get(self, hall, day, month, year):
-        if hall == "carm":
-            hallarg = CARM
-        elif hall == "dewick":
-            hallarg = DEWICK
-        else:
+        hallarg = dining_halls.get(hall.lower())
+        if hallarg is None:
             return ERROR
 
         indb = mongo.db.meals.find_one({"menu-id": hall + "-" + day + "-" + month + "-" + year})

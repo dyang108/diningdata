@@ -49,4 +49,4 @@ class Menu(restful.Resource):
                     jsondata[curr_meal][curr_foodtype].append(food.find(".//*[@name='Recipe_Desc']").text)
         return jsondata
 
-api.add_resource(Menu, '/<hall>/<day>/<month>/<year>')
+api.add_resource(Menu, '/menus/<hall>/<day>/<month>/<year>')

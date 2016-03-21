@@ -23,4 +23,11 @@ DEFAULT_REPRESENTATIONS = {'application/json': output_json}
 api = restful.Api(app)
 api.representations = DEFAULT_REPRESENTATIONS
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
+    return response
+
 import flask_rest_service.resources

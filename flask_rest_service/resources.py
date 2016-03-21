@@ -9,22 +9,30 @@ from bson.objectid import ObjectId
 
 DEWICK = "11&locationName=Dewick-MacPhie+Dining+Center"
 CARM = "09&locationName=Carmichael+Dining+Center"
-ERROR = { "error": "Resource not found." }
+ERROR = { "error": "Resource not found. Dining hall must be carm or dewick." }
 
 class Menu(restful.Resource):
     def get(self, hall, day, month, year):
-
         if hall == "carm":
-            hall = CARM
+            hallarg = CARM
         elif hall == "dewick":
-            hall = DEWICK
+            hallarg = DEWICK
         else:
             return ERROR
 
-        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hall + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
+        indb = mongo.db.meals.find_one({"menu-id": hall + "-" + day + "-" + month + "-" + year})
+        if indb is not None:
+            return indb
+
+        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
         htmlSource = page.read()
+        page.close()
         tree = html.fromstring(htmlSource)
-        return self.getdata(tree)
+        daymenus = self.getdata(tree)
+
+        dbobj = { "data": daymenus, "menu-id": hall + "-" + day + "-" + month + "-" + year, "credit": "March 20 2016 Derick Yang derickwyang@gmail.com"}
+        mongo.db.meals.insert(dbobj)
+        return dbobj
 
     def getdata(self, tree):
         jsondata = {}

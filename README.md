@@ -8,3 +8,11 @@ GET (url goes here)/[dining-hall]/[day]/[month]/[year]
 ```
 
 Credit to [Serafeim Papastefanos](http://spapas.github.io/2014/06/30/rest-flask-mongodb-heroku/) for a great tutorial on building a REST API.
+
+##### For me:
+To push changes to the Heroku app:
+```
+git add .
+git commit -m "something here"
+git push heroku master
+```

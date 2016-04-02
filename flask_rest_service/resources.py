@@ -55,4 +55,14 @@ class Menu(restful.Resource):
                     jsondata[curr_meal][curr_foodtype].append(food.find(".//*[@name='Recipe_Desc']").text)
         return jsondata
 
+class Ingredients(restful.Resource):
+    def get(self, food):
+        food = food.replace('+', ' ').lower()
+        indb = mongo.db.ingdata.find_one({"name": food})
+        if indb is not None:
+            return indb
+        else:
+            return {"error": "Food not found."}
+
 api.add_resource(Menu, '/menus/<hall>/<day>/<month>/<year>')
+api.add_resource(Ingredients, '/ingredients/<food>')

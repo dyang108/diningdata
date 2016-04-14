@@ -29,7 +29,7 @@ class Menu(restful.Resource):
         menuid = hall + "-" + day + "-" + month + "-" + year
         indb = mongo.db.meals.find_one({"menu-id": menuid})
         if indb is not None:
-            if indb.get("data") and (indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner")):
+            if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
                 return indb
 
         page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
@@ -44,6 +44,7 @@ class Menu(restful.Resource):
 
     def getdata(self, tree):
         jsondata = {}
+        print "hi"
         for meal in tree.findall(".//*[@class='shortmenumeals']"):
             curr_meal = meal.text
             jsondata[curr_meal] = {}
@@ -54,7 +55,9 @@ class Menu(restful.Resource):
                 for food in foodtype.xpath("../../../following-sibling::tr"):
                     if food.find(".//*[@name='Recipe_Desc']") is None:
                         break
-                    jsondata[curr_meal][curr_foodtype].append(cgi.escape(food.find(".//*[@name='Recipe_Desc']").text))
+                    newname = food.find(".//*[@name='Recipe_Desc']").text
+                    if newname:
+                        jsondata[curr_meal][curr_foodtype].append(cgi.escape(newname))
         return jsondata
 
 class Ingredients(restful.Resource):

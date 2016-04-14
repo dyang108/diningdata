@@ -29,7 +29,7 @@ class Menu(restful.Resource):
         menuid = hall + "-" + day + "-" + month + "-" + year
         indb = mongo.db.meals.find_one({"menu-id": menuid})
         if indb is not None:
-            if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
+            if indb.get("data") and (indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner")):
                 return indb
 
         page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)

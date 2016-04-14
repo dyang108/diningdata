@@ -1,5 +1,6 @@
 import json
 import urllib
+import cgi
 from lxml import html
 from flask import request, abort
 from flask.ext import restful
@@ -53,7 +54,7 @@ class Menu(restful.Resource):
                 for food in foodtype.xpath("../../../following-sibling::tr"):
                     if food.find(".//*[@name='Recipe_Desc']") is None:
                         break
-                    jsondata[curr_meal][curr_foodtype].append(food.find(".//*[@name='Recipe_Desc']").text)
+                    jsondata[curr_meal][curr_foodtype].append(cgi.escape(food.find(".//*[@name='Recipe_Desc']").text))
         return jsondata
 
 class Ingredients(restful.Resource):

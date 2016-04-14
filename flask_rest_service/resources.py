@@ -37,7 +37,7 @@ class Menu(restful.Resource):
         tree = html.fromstring(htmlSource)
         daymenus = self.getdata(tree)
 
-        dbobj = { "data": daymenus, "menu-id": menuid, "credit": "Please credit 'Tufts Dining Data' in your README" }
+        dbobj = { "data": daymenus, "menu-id": menuid, "credit": "https://github.com/dyang108/diningdata" }
         mongo.db.meals.update({ "menu-id": menuid }, dbobj, True)
         return dbobj
 

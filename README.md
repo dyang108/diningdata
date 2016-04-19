@@ -23,3 +23,18 @@ git push heroku master
 ##### Implementation notes:
 How it works: On the first request for a menu on a given day, the site loads and parses data from the actual Tufts Dining website. On subsequent calls to the same data, menu data is loaded directly from the database.
 Credit to Serafeim Papastefanos for a great [tutorial](http://spapas.github.io/2014/06/30/rest-flask-mongodb-heroku/) on building a REST API.
+
+##### Collaborating on the API:
+The first time I went through Tufts Dining recipes, I cycled through the 1000000 numeric combinations of the foods URL. The Tufts Menus server is prone to issues, so I used a number of try-except blocks to skip over pages that were difficult for Python to read.
+
+The `validrecipes.txt` file has a list of all the indices where the following URL is valid:
+
+`http://menus.tufts.edu/foodpro/label.asp?locationNum=09&RecNumAndPort=XXXXXX`
+
+Running `python populate_database.py` will loop through all valid recipe URL's and add them to your local Mongo DB. MAKE SURE you have mongo running in the background before starting this script.
+
+I encourage you to use `populate_database.py` as a template for your attempted parses of the Tufts Menus sites. Please [make a pull request](https://github.com/dyang108/diningdata/compare) to this repository if you have a *working* Python scraping script.
+
+As for getting the actual data into the API, [this](http://docs.mlab.com/migrating/) link should help you out. I'm going to suggest that you push your working scrapers to the repo so that I can run them, and then I can migrate the data into the mLab database. Alternatively, you can send me the .bson file or message me to be added as a collaborator on TuftsDiningData.
+
+Note to self: put in documentation for how to migrate local database to mLab, once I have done it again.

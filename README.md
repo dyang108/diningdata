@@ -31,7 +31,11 @@ The `validrecipes.txt` file has a list of all the indices where the following UR
 
 `http://menus.tufts.edu/foodpro/label.asp?locationNum=09&RecNumAndPort=XXXXXX`
 
+Before running the server, you will have to run the following command to install dependencies: `pip install -r requirements.txt`. To run the server, the command is `python runserver.py`
+
 Running `python populate_database.py` will loop through all valid recipe URL's and add them to your local Mongo DB. MAKE SURE you have mongo running in the background before starting this script.
+
+My app routes are in resources.py. I suggest you follow the tutorial above or inspect my code to figure out what it's doing. Essentially, the `api.add_resource` queries the specified class with the URL arguments.
 
 I encourage you to use `populate_database.py` as a template for your attempted parses of the Tufts Menus sites. Please [make a pull request](https://github.com/dyang108/diningdata/compare) to this repository if you have a *working* Python scraping script.
 

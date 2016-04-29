@@ -38,9 +38,13 @@ def getAllergens(tree):
     return allergenList
 
 def getCalories(tree):
-    calorie_elem = tree.xpath(/html/body/table[1]/tbody/tr/td/table/tbody/tr[1]/td[1]/font[4]/b)
+    calorie_elem = tree.xpath("/html/body/table[1]/tbody/tr/td/table/tbody/tr[1]/td[1]/font[4]/b")
+    print "calorie_elem: " 
+    print calorie_elem
     try:
        calorie_str = calorie_elem.text_content()
+       print "calorie_str: "
+       print clorie_str
     except:
         return "Calories not parsable"
     return int(re.search(r'\d+', string1).group())
@@ -83,7 +87,7 @@ if __name__ == "__main__":
                 print 'already in db: ' + index
                 continue
 
-            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree), "calories": getCalories(tree)}
+            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree)}#, "calories": getCalories(tree)}
 
             if toAddIng["ingredients"] == "Ingredients not parsable":
                 print 'ingredients not parsable: ' + index

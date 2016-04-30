@@ -1,7 +1,6 @@
 import os
 import urllib
 import ast
-import re
 from lxml import html
 from pymongo import MongoClient
 
@@ -37,18 +36,15 @@ def getAllergens(tree):
     allergenList = allergenString.split(', ')
     return allergenList
 
-def getCalories(tree):
-    calorie_elem = tree.xpath("/html/body/table[1]/tbody/tr/td/table/tbody/tr[1]/td[1]/font[4]/b")
-    print "calorie_elem: " 
-    print calorie_elem
+def getCalories(html):
     try:
-       calorie_str = calorie_elem.text_content()
-       print "calorie_str: "
-       print clorie_str
+        string1 = "Calories&nbsp;"
+        string2 = "</b>"
+        start = html.index(string1) + len(string1)
+        end = html.index(string2,start)
+        return int(html[start:end])
     except:
-        return "Calories not parsable"
-    return int(re.search(r'\d+', string1).group())
-
+        return -1
 
 
 
@@ -87,7 +83,7 @@ if __name__ == "__main__":
                 print 'already in db: ' + index
                 continue
 
-            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree)}#, "calories": getCalories(tree)}
+            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree), "calories": getCalories(htmlSource)}
 
             if toAddIng["ingredients"] == "Ingredients not parsable":
                 print 'ingredients not parsable: ' + index

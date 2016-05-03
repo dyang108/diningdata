@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
             foodname = tree.find_class('labelrecipe')[0].text_content().strip(' ').lower()
 
-            if db.ingdata.find_one({"name": foodname}) is not None:
+            if db.ingredients.find_one({"name": foodname}) is not None:
                 print 'already in db: ' + index
                 continue
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                 notParsable.append(i)
 
             print 'inserting: ' + index
-            db.ingdata.insert(toAddIng)
+            db.ingredients.insert(toAddIng)
             inserted.append(i)
         except IOError:
             print 'error: ' + str(i)

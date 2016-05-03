@@ -63,7 +63,7 @@ class Menu(restful.Resource):
 class Ingredients(restful.Resource):
     def get(self, food):
         food = food.replace('+', ' ').lower()
-        indb = mongo.db.ingdata.find_one({"name": food})
+        indb = mongo.db.ingredients.find_one({"name": food})
         if indb is not None:
             return indb
         else:

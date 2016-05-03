@@ -36,6 +36,18 @@ def getAllergens(tree):
     allergenList = allergenString.split(', ')
     return allergenList
 
+def getCalories(html):
+    try:
+        string1 = "Calories&nbsp;"
+        string2 = "</b>"
+        start = html.index(string1) + len(string1)
+        end = html.index(string2,start)
+        return int(html[start:end])
+    except:
+        return -1
+
+
+
 if __name__ == "__main__":
     notParsable = []
     inserted = []
@@ -71,7 +83,7 @@ if __name__ == "__main__":
                 print 'already in db: ' + index
                 continue
 
-            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree)}
+            toAddIng = { "ingredients": getIngredients(tree), "name": foodname, "allergens": getAllergens(tree), "calories": getCalories(htmlSource)}
 
             if toAddIng["ingredients"] == "Ingredients not parsable":
                 print 'ingredients not parsable: ' + index

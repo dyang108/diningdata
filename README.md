@@ -10,6 +10,10 @@ where the date is not padded by zeros, and [hall] is one of the following string
 
 Eg: `GET https://tuftsdiningdata.herokuapp.com/menus/carm/29/3/2016`
 
+There's also an ingredients endpoint: `GET https://tuftsdiningdata.herokuapp.com/ingredients/[foodname]`
+
+Eg: `GET https://tuftsdiningdata.herokuapp.com/ingredients/Belgian%20Waffles`
+
 If you could please credit me somehow in your project README, I would be very grateful.
 
 ##### For me:

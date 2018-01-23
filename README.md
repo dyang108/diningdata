@@ -14,6 +14,10 @@ There's also an ingredients endpoint: `GET https://tuftsdiningdata.herokuapp.com
 
 Eg: `GET https://tuftsdiningdata.herokuapp.com/ingredients/Belgian%20Waffles`
 
+I just added a "real menu" endpoint, since so many of the menu items are the same every day. This contains all the interesting foods at a given meal. Just add an 'r' in front of menus to get the "relevant" items.
+
+Eg: `GET https://tuftsdiningdata.herokuapp.com/rmenus/carm/29/3/2016`
+
 If you could please credit me somehow in your project README, I would be very grateful.
 
 ##### For me:
@@ -39,7 +43,7 @@ Before running the server, you will have to run the following command to install
 
 Running `python populate_database.py` will loop through all valid recipe URL's and add them to your local Mongo DB. MAKE SURE you have mongo running in the background before starting this script.
 
-My app routes are in resources.py. I suggest you follow the tutorial above or inspect my code to figure out what it's doing. Essentially, the `api.add_resource` queries the specified class with the URL arguments.
+My app routes are in `resources.py`. I suggest you follow the tutorial above or inspect my code to figure out what it's doing. Essentially, the `api.add_resource` queries the specified class with the URL arguments.
 
 I encourage you to use `populate_database.py` as a template for your attempted parses of the Tufts Menus sites. Please [make a pull request](https://github.com/dyang108/diningdata/compare) to this repository if you have a *working* Python scraping script.
 

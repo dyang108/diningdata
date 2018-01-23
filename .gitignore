@@ -1,1 +1,2 @@
 *.pyc
+flask_rest_service/*.pyc

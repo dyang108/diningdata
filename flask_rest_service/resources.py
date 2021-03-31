@@ -3,13 +3,11 @@ import urllib
 import cgi
 from lxml import html
 from flask import request, abort
-from flask.ext import restful
-from flask.ext.restful import reqparse
-from flask_rest_service import app, api, mongo
+from flask_rest_service import Resource, app, api, mongo
 from bson.objectid import ObjectId
-from consts import *
+from flask_rest_service.consts import *
 
-class Menu(restful.Resource):
+class Menu(Resource):
     def get(self, hall, day, month, year):
         hallarg = dining_halls.get(hall.lower())
         if hallarg is None:
@@ -48,10 +46,10 @@ class Menu(restful.Resource):
         return jsondata
 
 # these two classes are really very similar, ideally we would inherit from Menu class.
-class RelevantMenu(restful.Resource):
+class RelevantMenu(Resource):
     def get(self, hall, day, month, year):
         hallname = hall.lower()
-        if hallname is "dewick" or hallname is "carm":
+        if hallname == "dewick" or hallname == "carm":
             return ERROR
         hallarg = dining_halls.get(hallname)
         menuid = hallname + "-" + day + "-" + month + "-" + year + "r"
@@ -88,7 +86,7 @@ class RelevantMenu(restful.Resource):
                             jsondata[curr_meal][curr_foodtype].append(cgi.escape(newname))
         return jsondata
 
-class Ingredients(restful.Resource):
+class Ingredients(Resource):
     def get(self, food):
         food = food.replace('+', ' ').lower()
         indb = mongo.db.ingredients.find_one({"name": food})

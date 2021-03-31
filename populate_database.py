@@ -4,9 +4,9 @@ import ast
 from lxml import html
 from pymongo import MongoClient
 
-connection = MongoClient("mongodb+srv://derickwyang:IAtC7S9wR24kvq*XKOw@diningdata.hsrhe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+connection = MongoClient("mongodb://localhost:27017/")
 
-db = connection.rest
+db = connection.myFirstDatabase
 
 def notValidFood(tree):
     return tree.find_class('labelnotavailable')

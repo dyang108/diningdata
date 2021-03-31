@@ -1,5 +1,6 @@
 aniso8601==9.0.1
 click==7.1.2
+dnspython==1.16.0
 Flask==1.1.2
 Flask-PyMongo==2.3.0
 Flask-RESTful==0.3.8

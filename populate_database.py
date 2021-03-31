@@ -63,13 +63,13 @@ if __name__ == "__main__":
         try:
             index = str(i).zfill(6)
             # brute force all the files, using the base url for all of the foods
-            page = urllib.urlopen("http://menus.tufts.edu/foodpro/label.asp?locationNum=09&RecNumAndPort=" + index)
+            page = urllib.request.urlopen("http://menus.tufts.edu/foodpro/label.asp?locationNum=09&RecNumAndPort=" + index)
             htmlSource = page.read()
             page.close()
             tree = html.fromstring(htmlSource)
 
             if (notValidFood(tree)):
-                page = urllib.urlopen("http://menus.tufts.edu/foodpro/label.asp?locationNum=11&RecNumAndPort=" + index)
+                page = urllib.request.urlopen("http://menus.tufts.edu/foodpro/label.asp?locationNum=11&RecNumAndPort=" + index)
                 htmlSource = page.read()
                 page.close()
                 tree = html.fromstring(htmlSource)

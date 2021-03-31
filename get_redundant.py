@@ -8,7 +8,7 @@ dset = set()
 halls = ["dewick", "carm"]
 for i in range(1, 28):
     for j in range(1, 2):
-        page = urllib.urlopen("https://tuftsdiningdata.herokuapp.com/menus/" + halls[0] + "/" + str(i) + "/" + str(j) + "/2018")
+        page = urllib.request.urlopen("https://tuftsdiningdata.herokuapp.com/menus/" + halls[0] + "/" + str(i) + "/" + str(j) + "/2018")
         htmlSource = page.read()
         page.close()
         menu_obj = json.loads(htmlSource)

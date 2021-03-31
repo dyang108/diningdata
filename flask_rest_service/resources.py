@@ -17,8 +17,9 @@ class Menu(Resource):
         if indb is not None:
             if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
                 return indb
-
-        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
+        url = "http://menus.tufts.edu/FoodPro%203.1.NET/shortmenu.aspx?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year
+        print(url)
+        page = urllib.request.urlopen(url)
         htmlSource = page.read()
         page.close()
         tree = html.fromstring(htmlSource)
@@ -58,7 +59,7 @@ class RelevantMenu(Resource):
             if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
                 return indb
 
-        page = urllib.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
+        page = urllib.request.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
         htmlSource = page.read()
         page.close()
         tree = html.fromstring(htmlSource)

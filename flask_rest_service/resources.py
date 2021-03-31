@@ -1,6 +1,6 @@
 import json
 import urllib
-import cgi
+import re
 from lxml import html
 from flask import request, abort
 from flask_rest_service import Resource, app, api, mongo
@@ -18,7 +18,6 @@ class Menu(Resource):
             if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
                 return indb
         url = "http://menus.tufts.edu/FoodPro%203.1.NET/shortmenu.aspx?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year
-        print(url)
         page = urllib.request.urlopen(url)
         htmlSource = page.read()
         page.close()
@@ -39,11 +38,11 @@ class Menu(Resource):
                 curr_foodtype = foodtype.text[3:-3]
                 jsondata[curr_meal][curr_foodtype] = []
                 for food in foodtype.xpath("../../../following-sibling::tr"):
-                    if food.find(".//*[@name='Recipe_Desc']") is None:
-                        break
-                    newname = food.find(".//*[@name='Recipe_Desc']").text
-                    if newname:
-                        jsondata[curr_meal][curr_foodtype].append(cgi.escape(newname))
+                    newname = food.text_content().strip()
+                    if newname is not None:
+                        if re.match("-- .* --", newname):
+                            break
+                        jsondata[curr_meal][curr_foodtype].append(newname)
         return jsondata
 
 # these two classes are really very similar, ideally we would inherit from Menu class.
@@ -59,7 +58,7 @@ class RelevantMenu(Resource):
             if indb["data"].get("Breakfast") or indb["data"].get("Lunch") or indb["data"].get("Dinner"):
                 return indb
 
-        page = urllib.request.urlopen("http://menus.tufts.edu/foodpro/shortmenu.asp?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
+        page = urllib.request.urlopen("http://menus.tufts.edu/FoodPro%203.1.NET/shortmenu.aspx?sName=Tufts+Dining&locationNum=" + hallarg + "&naFlag=1&WeeksMenus=This+Week%27s+Menus&myaction=read&dtdate=" + month + "%2F" + day + "%2F" + year)
         htmlSource = page.read()
         page.close()
         tree = html.fromstring(htmlSource)
@@ -69,7 +68,7 @@ class RelevantMenu(Resource):
         mongo.db.meals.update({ "menu-id": menuid }, dbobj, True)
         return dbobj
 
-    def getdata(self, tree, hallname):
+    def getdata(self, tree):
         jsondata = {}
         for meal in tree.findall(".//*[@class='shortmenumeals']"):
             curr_meal = meal.text
@@ -79,13 +78,14 @@ class RelevantMenu(Resource):
                 curr_foodtype = foodtype.text[3:-3]
                 jsondata[curr_meal][curr_foodtype] = []
                 for food in foodtype.xpath("../../../following-sibling::tr"):
-                    if food.find(".//*[@name='Recipe_Desc']") is None:
-                        break
-                    newname = food.find(".//*[@name='Recipe_Desc']").text
-                    if newname:
+                    newname = food.text_content().strip()
+                    if newname is not None:
+                        if re.match("-- .* --", newname):
+                            break
                         if newname not in regulars[hallname][curr_meal]:
-                            jsondata[curr_meal][curr_foodtype].append(cgi.escape(newname))
+                            jsondata[curr_meal][curr_foodtype].append(newname)
         return jsondata
+
 
 class Ingredients(Resource):
     def get(self, food):
